@@ -28,13 +28,16 @@ COPY help.md /tmp/
 ### add licenses to this directory
 COPY licenses /licenses
 
-RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server.repo && \
-    curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo
-RUN yum update 
-RUN yum -y install openssl
-RUN yum -y install gdb
-RUN ACCEPT_EULA=Y yum -y install mssql-server && yum -y remove unixODBC-utf16 unixODBC-utf16-devel
-RUN yum install -y mssql-tools unixODBC-devel && \
+# Install latest mssql-server package
+# You don't have to register subscription if you build docker image on registered RHEL machine.
+# If you build on other machines, please fill in Red Hat subscription name and password and uncomment the below command.
+RUN subscription-manager register --username weldoami --password R@sha2000 --auto-attach
+RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms,packages-microsoft-com-mssql-server,packages-microsoft-com-prod && \
+    curl https://packages.microsoft.com/config/rhel/7/mssql-server.repo > /etc/yum.repos.d/mssql-server.repo && \
+    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
+    ACCEPT_EULA=Y yum -y install --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs \
+      golang-github-cpuguy83-go-md2man mssql-server mssql-tools && \
+    go-md2man -in /tmp/help.md -out /help.1 && rm -f /tmp/help.md && \
     yum clean all
 
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
