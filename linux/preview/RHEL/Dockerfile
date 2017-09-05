@@ -34,8 +34,9 @@ COPY licenses /licenses
 # RUN subscription-manager register --username weldoami --password R@sha2000 --auto-attach
 RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms,packages-microsoft-com-mssql-server,packages-microsoft-com-prod && \
     curl https://packages.microsoft.com/config/rhel/7/mssql-server.repo > /etc/yum.repos.d/mssql-server.repo && \
-    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
-    yum -y remove --cacheonly --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs unixODBC-utf16 && yum update
+    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo 
+RUN yum update
+RUN yum -y remove unixODBC-utf16 unixODBC-utf16-devel
 RUN yum install -y mssql-tools unixODBC-devel
 RUN  ACCEPT_EULA=Y yum -y install --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs \
       golang-github-cpuguy83-go-md2man mssql-server && \
