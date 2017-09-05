@@ -35,6 +35,7 @@ COPY licenses /licenses
 RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms,packages-microsoft-com-mssql-server,packages-microsoft-com-prod && \
     curl https://packages.microsoft.com/config/rhel/7/mssql-server.repo > /etc/yum.repos.d/mssql-server.repo && \
     curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
+    yum remove unixODBC-utf16 unixODBC-utf16-devel && yum update && yum install -y unixODBC-devel && \
     ACCEPT_EULA=Y yum -y install --disablerepo "*" --enablerepo ${REPOLIST} --setopt=tsflags=nodocs \
       golang-github-cpuguy83-go-md2man mssql-server mssql-tools && \
     go-md2man -in /tmp/help.md -out /help.1 && rm -f /tmp/help.md && \
