@@ -30,7 +30,8 @@ COPY licenses /licenses
 
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server.repo && \
     curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo
-RUN yum update && ACCEPT_EULA=Y yum -y install mssql-server && sudo yum update && yum remove unixODBC-utf16 unixODBC-utf16-devel
+RUN yum update && yum -y install gdb openssl && \
+    ACCEPT_EULA=Y yum -y install mssql-server && sudo yum update && yum -y remove unixODBC-utf16 unixODBC-utf16-devel
 RUN yum install -y mssql-tools unixODBC-devel && \
     yum clean all
 
