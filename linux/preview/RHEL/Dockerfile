@@ -31,7 +31,7 @@ COPY licenses /licenses
 # Install latest mssql-server package
 # You don't have to register subscription if you build docker image on registered RHEL machine.
 # If you build on other machines, please fill in Red Hat subscription name and password and uncomment the below command.
-RUN subscription-manager register --username weldoami --password R@sha2000 --auto-attach
+# RUN subscription-manager register --username weldoami --password R@sha2000 --auto-attach
 RUN REPOLIST=rhel-7-server-rpms,rhel-7-server-optional-rpms,packages-microsoft-com-mssql-server,packages-microsoft-com-prod && \
     curl https://packages.microsoft.com/config/rhel/7/mssql-server.repo > /etc/yum.repos.d/mssql-server.repo && \
     curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
